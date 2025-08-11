@@ -30,7 +30,7 @@ function Login() {
     e.preventDefault();
     setError('');
     setMessage('');
-
+  
     try {
       const response = await fetch("http://182.237.13.165/AkshReactAPI/api/Auth/login", {
         method: 'POST',
@@ -39,28 +39,31 @@ function Login() {
         },
         body: JSON.stringify(form),
       });
-
+  
       const data = await response.json();
-      if(rememberMe){
-        localStorage.setItem('authToken',data.token);
-      }
+      console.log('Token received from backend:', data.token); // ✅ Add this line
+
       if (response.status === 200 && data.token) {
-        // ✅ Save token to context + localStorage (optional)
+        // ✅ Save token to context + storage based on "Remember me"
         setAuthToken(data.token);
-        localStorage.setItem('authToken', data.token);
-
+          if (rememberMe) {
+          localStorage.setItem("authToken", data.token);
+        } else {
+          sessionStorage.setItem("authToken", data.token);
+        }
+  
         setMessage(`Welcome ${data.username || form.username}! Login successful.`);
-
+  
         setTimeout(() => {
           router.push('/Crud2/');
         }, 1000);
       } else {
-
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
       setError('Something went wrong. Please try again later.');
     }
+    
   };
 
 
