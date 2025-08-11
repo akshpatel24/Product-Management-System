@@ -187,8 +187,8 @@ const ProductManagement: React.FC = () => {
           handleDepartmentChange={handleDepartmentChange}
           refreshList={() => fetchProduct()}
           validateProduct={validateProduct}
-          token={token} // ✅ Pass token to the modal
-          productList={productlist} // ✅ this must be passed
+          token={token} //
+          productList={productlist} // ✅ t
 
         />
       )}
@@ -231,7 +231,6 @@ const ProductManagement: React.FC = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value={2}>2</option>
               <option value={5}>5</option>
               <option value={10}>10</option>
               <option value={20}>20</option>

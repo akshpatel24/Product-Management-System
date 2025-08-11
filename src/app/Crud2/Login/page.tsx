@@ -14,7 +14,7 @@ function Login() {
     username: '',
     password: ''
   });
-
+  const [rememberMe, setRememberMe]=useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -41,7 +41,9 @@ function Login() {
       });
 
       const data = await response.json();
-
+      if(rememberMe){
+        localStorage.setItem('authToken',data.token);
+      }
       if (response.status === 200 && data.token) {
         // ✅ Save token to context + localStorage (optional)
         setAuthToken(data.token);
@@ -53,6 +55,7 @@ function Login() {
           router.push('/Crud2/');
         }, 1000);
       } else {
+
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
@@ -107,7 +110,7 @@ function Login() {
           </div>
 
           <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="rememberMe" />
+            <input type="checkbox" className="form-check-input" id="rememberMe" checked={rememberMe} onChange={(e)=> setRememberMe(e.target.checked)}/>
             <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
           </div>
 

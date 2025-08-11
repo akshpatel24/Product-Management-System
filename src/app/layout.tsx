@@ -40,11 +40,9 @@ export default function RootLayout({
   const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // You can load token from cookies/localStorage if needed
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) setAuthToken(token);
   }, []);
-
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
