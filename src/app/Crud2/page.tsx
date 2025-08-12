@@ -122,7 +122,10 @@ const ProductManagement: React.FC = () => {
   
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
+  //keep track of last item
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  //keeps index of first item.
+
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
   
   return (
@@ -149,7 +152,7 @@ const ProductManagement: React.FC = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(1);
+            setCurrentPage(currentPage);
           }}
         />
       </div>
