@@ -3,11 +3,10 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AuthContext } from '@/app/layout'; // ✅ adjust if path differs
-
+import { AuthContext } from '@/app/layout';
 function Login() {
   const router = useRouter();
-  const { setAuthToken } = useContext(AuthContext); // ✅ Get token setter from context
+  const { authToken,setAuthToken } = useContext(AuthContext); // ✅ Get token setter from context
 
   const [form, setForm] = useState({
     email: '',
@@ -47,11 +46,8 @@ function Login() {
         // ✅ Save token to context + storage based on "Remember me"
         setAuthToken(data.token);
           if (rememberMe) {
-          localStorage.setItem("authToken", data.token);
-        } else {
-          sessionStorage.setItem("authToken", data.token);
-        }
-  
+          localStorage.setItem("authToken",data.token);
+        } 
         setMessage(`Welcome ${data.username || form.username}! Login successful.`);
   
         setTimeout(() => {

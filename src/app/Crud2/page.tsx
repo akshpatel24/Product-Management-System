@@ -1,5 +1,6 @@
 "use client";
-import { AuthContext } from '@/app/layout';
+// import AuthRedirect from "./Crud2/Authdirect/page"; // ✅ correct spelling & case
+import { AuthContext } from "../layout";
 import React, { useEffect, useState, useContext } from "react";
 import AddEditProductModal from './ProductFormeditaddModal';
 import ProductTable from "./ProductTable";
