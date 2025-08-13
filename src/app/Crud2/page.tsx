@@ -29,8 +29,11 @@ const ProductManagement: React.FC = () => {
     notes: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
+
+  // const [selectedDepartment, setSelectedDepartment] = useState('');
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(2);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [departments] = useState<string[]>(["Grocery", "Sports", "Cosmetic"]);
   const [productlist, setProductlist] = useState<Product[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -115,19 +118,33 @@ const ProductManagement: React.FC = () => {
     if (typeof product.notes !== "string") errors.push("Notes must be text.");
     return errors;
   };
-  
-  const filteredProducts = productlist.filter(
-    (p) => !p.isDeleted && p.pName.toLowerCase().startsWith(searchTerm.toLowerCase())
+  const filteredProducts = productlist.filter((product) =>
+    Object.values(product).some((value) =>
+      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
   
+
+
+
+
+
+
+
+
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
+  console.log(totalPages)
+  const indexOfLastItem = (currentPage * itemsPerPage);
+
+  console.log("Index of Last Item:",indexOfLastItem)
   //keep track of last item
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage ;
+
+  console.log("Index of First Item: ",indexOfFirstItem)
   //keeps index of first item.
 
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
-  
+  console.log("Current Product: ",currentProducts);
   return (
     <div className="container mt-4">
       <h1 className="h3 text-center mb-4">Product Management System</h1>
@@ -152,10 +169,25 @@ const ProductManagement: React.FC = () => {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
-            setCurrentPage(currentPage);
+
           }}
         />
       </div>
+      {/* <select
+    className="form-select w-auto"
+    value={selectedDepartment}
+    onChange={(e) => setSelectedDepartment(e.target.value)}
+  >
+    <option value="">All Departments</option>
+    {departments.map((dept) => (
+      <option key={dept} value={dept}>
+        {dept}
+      </option>
+    ))}
+  </select> */}
+
+
+
       {loading ? (
         <div className="text-center my-5">
           <i className="bi bi-arrow-repeat spinner-border" style={{ fontSize: "2rem" }}></i>
