@@ -19,10 +19,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("authToken");
     if (token) {
       setAuthToken(token);
-      router.push("/Crud2"); // ✅ Redirect if token exists
+      router.push("/ProductManagement"); // ✅ Redirect if token exists
     }
     else{
-      router.push("/Crud2/Login");
+      router.push("/ProductManagement/Login");
 
     }
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <nav style={{ padding: "1rem", background: "#f5f5f5" }}>
-          <Link href="/Crud2/Login">Home</Link>
+          <Link href="/ProductManagement/Login">Home</Link>
         </nav>
         <AuthContext.Provider value={{ authToken, setAuthToken }}>
           {children}

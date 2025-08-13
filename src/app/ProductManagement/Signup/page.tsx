@@ -41,7 +41,7 @@ const SignUpPage = () => {
 
         // Wait for 1.5 seconds before redirecting
         setTimeout(() => {
-          router.push("/Crud2/Login");
+          router.push("/ProductManagement/Login");
         }, 1500);``
       } else {
         setError(resultText || "Registration failed. Please try again.");

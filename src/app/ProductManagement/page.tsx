@@ -1,12 +1,11 @@
 "use client";
-// import AuthRedirect from "./Crud2/Authdirect/page"; // ✅ correct spelling & case
 import { AuthContext } from "../layout";
 import React, { useEffect, useState, useContext } from "react";
 import AddEditProductModal from './ProductFormeditaddModal';
 import ProductTable from "./ProductTable";
 import DeleteModal from './ProductDeleteModal';
 import ViewModal from './ProductViewModal';
-import Pagination from "../Crud2/Pagination";
+import Pagination from "./Pagination";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
