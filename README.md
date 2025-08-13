@@ -7,3 +7,7 @@ state → use in API requests.
 Redirect to /Crud2 protected page.
 Future API calls include token in headers.
 On refresh → token detected → redirect appropriately.
+
+
+AUGUST 13:
+Added a global search function that is case-insensitive and filters across all product attributes
