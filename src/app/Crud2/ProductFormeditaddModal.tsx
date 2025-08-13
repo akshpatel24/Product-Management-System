@@ -134,7 +134,7 @@ const AddEditProductModal: React.FC<Props> = ({
               className="form-control mb-2"
               value={formProduct.mfgDate ? formProduct.mfgDate.split('T')[0] : ''}
               onChange={handleInputChange}
-              min={new Date().toISOString().split('T')[0]}  // This sets minimum selectable date to today
+              max={new Date().toISOString().split('T')[0]}  // This sets minimum selectable date to today
 
             />
             <input
