@@ -1,5 +1,4 @@
 "use client";
-import { AuthContext } from "../layout";
 import React, { useEffect, useState, useContext } from "react";
 import AddEditProductModal from './ProductFormeditaddModal';
 import ProductTable from "./ProductTable";
@@ -8,6 +7,8 @@ import ViewModal from './ProductViewModal';
 import Pagination from "./Pagination";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+
+let token: string | null;
 
 const ProductManagement: React.FC = () => {
   interface Product {
@@ -44,8 +45,7 @@ const ProductManagement: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // ✅ Use useContext to access the AuthContext
-  const authContext = useContext(AuthContext);
-  const token = authContext?.authToken;
+ 
 
   const handleClose = () => {
     setShowModal(false);
@@ -61,10 +61,6 @@ const ProductManagement: React.FC = () => {
   
   const fetchProduct = async () => {
     // ✅ Check if token is available before fetching
-    if (!token) {
-        console.warn("No authentication token found. Aborting fetch.");
-        return;
-    }
     setLoading(true);
     try {
       const response = await fetch('http://182.237.13.165/AkshReactAPI/api/Product/List', {
@@ -90,6 +86,8 @@ const ProductManagement: React.FC = () => {
   };
   
   useEffect(() => {
+    token = localStorage.getItem("authToken")
+
     // ✅ Call fetchProduct only when the token is available
     if (token) {
       fetchProduct();
@@ -123,13 +121,6 @@ const ProductManagement: React.FC = () => {
     )
   );
   
-
-
-
-
-
-
-
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   console.log(totalPages)
@@ -284,3 +275,45 @@ const ProductManagement: React.FC = () => {
 };
 
 export default ProductManagement;
+
+
+// class Apiservice {
+//   _baseUrl = 'localhost:8000';
+
+//     post(url) {
+//       this.getRequstUrl(url)
+//       fetch('', )
+//     }
+
+//     getRequestUrl() {
+//       return this._baseUrl + url
+//     }
+// }
+
+// abstract class Manager {
+//   abstract route: string;
+//   apiService
+
+//   getDetailRoute(id: number | string) {
+//     return this.route + id;
+//   }
+
+//   update(productId: number | string) {
+//     this.apiService.post(this.getDetailRoute(productId));
+//   }
+
+//   delete(prodcut)
+
+// }
+
+
+// class ProductManager  extends Manager{
+//   route = '/products/';
+
+
+// }
+
+// class UserManager extends Manager {
+//   route = 'users'
+// }
+

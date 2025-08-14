@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState} from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AuthContext } from '@/app/layout';
+
+
 function Login() {
   const router = useRouter();
-  const { authToken,setAuthToken } = useContext(AuthContext); // ✅ Get token setter from context
 
   const [form, setForm] = useState({
     email: '',
@@ -24,6 +24,7 @@ function Login() {
       [name]: value,
     }));
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,14 +45,14 @@ function Login() {
 
       if (response.status === 200 && data.token) {
         // ✅ Save token to context + storage based on "Remember me"
-        setAuthToken(data.token);
+        // setAuthToken(data.token);
           if (rememberMe) {
           localStorage.setItem("authToken",data.token);
         } 
         setMessage(`Welcome ${data.username || form.username}! Login successful.`);
   
         setTimeout(() => {
-          router.push('/Crud2/');
+          router.push('/ProductManagement/');
         }, 1000);
       } else {
         setError(data.message || 'Invalid credentials');
@@ -119,7 +120,7 @@ function Login() {
           {message && <p className="mt-3 alert alert-success">{message}</p>}
 
           <div className="text-center mt-3">
-            <p>Not a member? <Link href="/Crud2/Signup">Register</Link></p>
+            <p>Not a member? <Link href="/ProductManagement/Signup">Register</Link></p>
             <p>or sign in with:</p>
             <div className="d-flex justify-content-center gap-2">
               <button type="button" className="btn btn-outline-primary btn-sm">
