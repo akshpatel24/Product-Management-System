@@ -30,6 +30,8 @@ const ProductManagement: React.FC = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
 
+  const [token, setToken] = useState<string | null>(null);
+
   // const [selectedDepartment, setSelectedDepartment] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -86,13 +88,15 @@ const ProductManagement: React.FC = () => {
   };
   
   useEffect(() => {
-    token = localStorage.getItem("authToken")
-
-    // ✅ Call fetchProduct only when the token is available
+    const storedToken = localStorage.getItem("authToken");
+    setToken(storedToken);
+  }, []);
+  
+  useEffect(() => {
     if (token) {
       fetchProduct();
     }
-  }, [token]); // ✅ Add token as a dependency
+  }, [token]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
