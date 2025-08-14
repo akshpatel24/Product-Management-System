@@ -10,4 +10,8 @@ On refresh → token detected → redirect appropriately.
 
 
 AUGUST 13:
-Added a global search function that is case-insensitive and filters across all product attributes
+Added a global search function that is case-insensitive and filters across all product attributes.
+
+
+August 14:
+Removed the useContext implementation that was storing the token on the front end. This was unnecessary since the token is already being retrieved in real time from the server, eliminating the need to maintain it in client-side state.
