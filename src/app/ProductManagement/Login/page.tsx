@@ -39,16 +39,19 @@ function Login() {
         },
         body: JSON.stringify(form),
       });
-  
       const data = await response.json();
       console.log('Token received from backend:', data.token); // ✅ Add this line
-
+      
       if (response.status === 200 && data.token) {
         // ✅ Save token to context + storage based on "Remember me"
         // setAuthToken(data.token);
           if (rememberMe) {
           localStorage.setItem("authToken",data.token);
         } 
+        {
+          sessionStorage.setItem("authToken", data.token); // expires on browser close
+        }
+
         setMessage(`Welcome ${data.username || form.username}! Login successful.`);
   
         setTimeout(() => {

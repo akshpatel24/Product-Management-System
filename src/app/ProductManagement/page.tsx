@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import AddEditProductModal from './ProductFormeditaddModal';
 import ProductTable from "./ProductTable";
 import DeleteModal from './ProductDeleteModal';
@@ -8,7 +8,7 @@ import Pagination from "./Pagination";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-let token: string | null;
+let token: string | null = null; // ✅ normal variable for token
 
 const ProductManagement: React.FC = () => {
   interface Product {
@@ -30,10 +30,6 @@ const ProductManagement: React.FC = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [token, setToken] = useState<string | null>(null);
-
-  // const [selectedDepartment, setSelectedDepartment] = useState('');
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [departments] = useState<string[]>(["Grocery", "Sports", "Cosmetic"]);
@@ -46,9 +42,6 @@ const ProductManagement: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // ✅ Use useContext to access the AuthContext
- 
-
   const handleClose = () => {
     setShowModal(false);
     setIsEditing(false);
@@ -60,9 +53,9 @@ const ProductManagement: React.FC = () => {
       notes: '',
     });
   };
-  
+
   const fetchProduct = async () => {
-    // ✅ Check if token is available before fetching
+    if (!token) return; // ✅ use normal variable
     setLoading(true);
     try {
       const response = await fetch('http://182.237.13.165/AkshReactAPI/api/Product/List', {
@@ -72,7 +65,7 @@ const ProductManagement: React.FC = () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setProductlist(data || []);
@@ -86,17 +79,14 @@ const ProductManagement: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
+  // ✅ Load token from localStorage and fetch products
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
-    setToken(storedToken);
-  }, []);
-  
-  useEffect(() => {
+    token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
       fetchProduct();
     }
-  }, [token]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
@@ -119,26 +109,18 @@ const ProductManagement: React.FC = () => {
     if (typeof product.notes !== "string") errors.push("Notes must be text.");
     return errors;
   };
+
   const filteredProducts = productlist.filter((product) =>
     Object.values(product).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      String(value ?? "").toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-  
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  console.log(totalPages)
-  const indexOfLastItem = (currentPage * itemsPerPage);
-
-  console.log("Index of Last Item:",indexOfLastItem)
-  //keep track of last item
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage ;
-
-  console.log("Index of First Item: ",indexOfFirstItem)
-  //keeps index of first item.
-
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
-  console.log("Current Product: ",currentProducts);
+
   return (
     <div className="container mt-4">
       <h1 className="h3 text-center mb-4">Product Management System</h1>
@@ -161,26 +143,9 @@ const ProductManagement: React.FC = () => {
           className="form-control w-50"
           placeholder="Search product..."
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-
-          }}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      {/* <select
-    className="form-select w-auto"
-    value={selectedDepartment}
-    onChange={(e) => setSelectedDepartment(e.target.value)}
-  >
-    <option value="">All Departments</option>
-    {departments.map((dept) => (
-      <option key={dept} value={dept}>
-        {dept}
-      </option>
-    ))}
-  </select> */}
-
-
 
       {loading ? (
         <div className="text-center my-5">
@@ -215,11 +180,10 @@ const ProductManagement: React.FC = () => {
           handleClose={handleClose}
           handleInputChange={handleInputChange}
           handleDepartmentChange={handleDepartmentChange}
-          refreshList={() => fetchProduct()}
+          refreshList={fetchProduct}
           validateProduct={validateProduct}
-          token={token} //
-          productList={productlist} // ✅ t
-
+          token={token} // ✅ normal variable
+          productList={productlist}
         />
       )}
 
@@ -231,7 +195,7 @@ const ProductManagement: React.FC = () => {
               setShowViewModal(false);
               setViewProductId(null);
             }}
-            token={token} // ✅ Pass token to the modal
+            token={token}
           />
         </div>
       )}
@@ -244,8 +208,8 @@ const ProductManagement: React.FC = () => {
             setShowDeleteModal(false);
             setProductToDelete(null);
           }}
-          refreshList={() => fetchProduct()}
-          token={token} // ✅ Pass token to the modal
+          refreshList={fetchProduct}
+          token={token}
         />
       )}
 
@@ -279,45 +243,3 @@ const ProductManagement: React.FC = () => {
 };
 
 export default ProductManagement;
-
-
-// class Apiservice {
-//   _baseUrl = 'localhost:8000';
-
-//     post(url) {
-//       this.getRequstUrl(url)
-//       fetch('', )
-//     }
-
-//     getRequestUrl() {
-//       return this._baseUrl + url
-//     }
-// }
-
-// abstract class Manager {
-//   abstract route: string;
-//   apiService
-
-//   getDetailRoute(id: number | string) {
-//     return this.route + id;
-//   }
-
-//   update(productId: number | string) {
-//     this.apiService.post(this.getDetailRoute(productId));
-//   }
-
-//   delete(prodcut)
-
-// }
-
-
-// class ProductManager  extends Manager{
-//   route = '/products/';
-
-
-// }
-
-// class UserManager extends Manager {
-//   route = 'users'
-// }
-
