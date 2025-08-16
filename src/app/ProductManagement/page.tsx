@@ -8,7 +8,7 @@ import Pagination from "./Pagination";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-let token: string | null = null; // ✅ normal variable for token
+// let token: string | null = null; // ✅ normal variable for token
 
 const ProductManagement: React.FC = () => {
   interface Product {
@@ -29,6 +29,9 @@ const ProductManagement: React.FC = () => {
     notes: '',
   });
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [token, setToken] = useState<string | null>(null);
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -80,13 +83,19 @@ const ProductManagement: React.FC = () => {
     }
   };
 
-  // ✅ Load token from localStorage and fetch products
   useEffect(() => {
-    token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
+  
+  // fetch data when token changes
+  useEffect(() => {
     if (token) {
       fetchProduct();
     }
-  }, []);
+  }, [token]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
