@@ -87,16 +87,11 @@ const ProductManagement: React.FC = () => {
     const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (savedToken) {
       setToken(savedToken);
-    }
-  }, []);
-  
-  // fetch data when token changes
-  useEffect(() => {
-    if (token) {
-      fetchProduct();
-    }
+     fetchProduct();
+        }
   }, [token]);
-
+  
+ 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
   };
