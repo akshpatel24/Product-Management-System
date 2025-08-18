@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
       // setAuthToken(token);
       router.push("/ProductManagement"); // ✅ Redirect if token exists
