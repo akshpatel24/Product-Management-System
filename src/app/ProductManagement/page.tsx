@@ -89,6 +89,8 @@ const ProductManagement: React.FC = () => {
      fetchProduct();
         }
   }, [token]);
+
+  //fetchProduct runs on component mount and token state
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
   };
@@ -200,7 +202,6 @@ const ProductManagement: React.FC = () => {
           />
         </div>
       )}
-
       {showDeleteModal && productToDelete && (
         <DeleteModal
           productId={productToDelete.pId!}
