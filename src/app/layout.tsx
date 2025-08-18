@@ -29,7 +29,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <nav style={{ padding: "1rem", background: "#f5f5f5" }}>
           <Link href="/ProductManagement/Login">Home</Link>
         </nav>
+        {/* <AuthContext.Provider value={{ authToken, setAuthToken }}> */}
           {children}
+        {/* </AuthContext.Provider> */}
       </body>
     </html>
   );

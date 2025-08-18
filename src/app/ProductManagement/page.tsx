@@ -82,7 +82,6 @@ const ProductManagement: React.FC = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (savedToken) {
@@ -90,8 +89,6 @@ const ProductManagement: React.FC = () => {
      fetchProduct();
         }
   }, [token]);
-  
- 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
   };
