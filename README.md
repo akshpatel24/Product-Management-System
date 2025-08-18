@@ -38,3 +38,7 @@ This is different because:
 The UI depends on token (if no token → show nothing / error, if token → fetch list).
 
 The data fetching should re-run if token changes (e.g., user logs in, logs out, or refreshes token).
+
+
+August 18th:
+Today, I fixed how my app handles tokens and redirects. I made sure that if I’m logged in, I only get sent to /ProductManagement if I’m not already there, and if I’m not logged in, I only get sent to the login page if I’m somewhere else. I added <html> and <body> tags so Next.js doesn’t give errors and used a loading state to avoid flickering when checking the token. In the ProductManagement page, I set up a useEffect to get the token from localStorage or sessionStorage and then call fetchProduct() only if the token exists. This way, my product data loads correctly, and the page doesn’t keep redirecting or reloading unnecessarily.

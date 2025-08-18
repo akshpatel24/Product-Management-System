@@ -1,15 +1,11 @@
 "use client";
-
 import "./globals.css";
 import Link from "next/link";
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-
   useEffect(() => {
     const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (token) {
