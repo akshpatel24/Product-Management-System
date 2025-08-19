@@ -7,8 +7,9 @@ interface PaginationProps {
 }
 
  const Pagination = (props:PaginationProps) => {
-    const pages = Array.from({ length: props.totalPages }, (_, i) => i + 1);
   
+   const pages = Array.from({ length: props.totalPages }, (_, i) => i + 1);
+   
     return (
       <nav aria-label="Page navigation example">
         <ul className="pagination justify-content-center">
@@ -17,6 +18,10 @@ interface PaginationProps {
               Previous
             </button>
           </li>
+
+          {/* oops through the pages array (which is [1, 2, 3, ..., totalPages]).
+
+For each number, it renders a <li> with a <button>. */}
           {pages.map((page) => (
             <li key={page} className={`page-item ${props.currentPage === page ? "active" : ""}`}>
               <button className="page-link" onClick={() => props.onPageChange(page)}>

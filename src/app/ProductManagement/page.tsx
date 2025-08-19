@@ -28,6 +28,11 @@ const ProductManagement: React.FC = () => {
     mfgDate: '',
     notes: '',
   });
+
+
+
+
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [token, setToken] = useState<string | null>(null);
