@@ -29,10 +29,6 @@ const ProductManagement: React.FC = () => {
     notes: '',
   });
 
-
-
-
-
   const [searchTerm, setSearchTerm] = useState('');
 
   const [token, setToken] = useState<string | null>(null);
@@ -49,6 +45,17 @@ const ProductManagement: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageFromUrl = urlParams.get("page");
+    const savedPage = localStorage.getItem("currentPage");
+
+    if (pageFromUrl) {
+      setCurrentPage(Number(pageFromUrl));
+    } else if (savedPage) {
+      setCurrentPage(Number(savedPage));
+    }
+  }, []);
 
   const handleClose = () => {
     setShowModal(false);
@@ -94,6 +101,7 @@ const ProductManagement: React.FC = () => {
      fetchProduct();
         }
   }, [token]);
+  
 
   //fetchProduct runs on component mount and token state
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,6 +114,16 @@ const ProductManagement: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+
+  // ✅ Save to URL
+  const url = new URL(window.location.href);
+  url.searchParams.set("page", page.toString());
+  window.history.pushState({}, "", url);
+
+  // ✅ Save to localStorage
+  localStorage.setItem("currentPage", page.toString());
+
+
   };
 
   const validateProduct = (product: Product): string[] => {

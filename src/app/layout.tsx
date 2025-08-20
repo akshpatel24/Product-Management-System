@@ -18,6 +18,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   }, [router]);
 
+
+  //  On page load or refresh, the component mounts → useEffect runs.
+
+  //  It reads authToken from localStorage or sessionStorage.
+   
+  //  If token exists → user is considered logged in → router redirects to /ProductManagement.
+   
+  //  If no token → user is redirected to /ProductManagement/Login.
+   
+  //  [router] dependency ensures useEffect has access to the router object, which is stable, so it only runs once on mount.
+
+
+
+
+
+
   return (
     <html lang="en">
       <body>
