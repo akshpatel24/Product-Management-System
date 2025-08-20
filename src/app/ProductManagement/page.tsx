@@ -125,6 +125,7 @@ const ProductManagement: React.FC = () => {
   );
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  //round's up
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
