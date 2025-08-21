@@ -40,7 +40,6 @@ function Login() {
         body: JSON.stringify(form),
       });
       const data = await response.json();
-      console.log('Token received from backend:', data.token); // ✅ Add this line
       
       if (response.status === 200 && data.token) {
         // ✅ Save token to context + storage based on "Remember me"

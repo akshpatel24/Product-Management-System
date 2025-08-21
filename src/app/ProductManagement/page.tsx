@@ -28,12 +28,8 @@ const ProductManagement: React.FC = () => {
     mfgDate: '',
     notes: '',
   });
-
   const [searchTerm, setSearchTerm] = useState('');
-
   const [token, setToken] = useState<string | null>(null);
-
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [departments] = useState<string[]>(["Grocery", "Sports", "Cosmetic"]);
@@ -98,10 +94,10 @@ const ProductManagement: React.FC = () => {
     const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (savedToken) {
       setToken(savedToken);
-     fetchProduct();
-        }
+      fetchProduct();
+    }
   }, [token]);
-  
+
 
   //fetchProduct runs on component mount and token state
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,13 +111,13 @@ const ProductManagement: React.FC = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
-  // ✅ Save to URL
-  const url = new URL(window.location.href);
-  url.searchParams.set("page", page.toString());
-  window.history.pushState({}, "", url);
+    // ✅ Save to URL
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page.toString());
+    window.history.pushState({}, "", url);
 
-  // ✅ Save to localStorage
-  localStorage.setItem("currentPage", page.toString());
+    // ✅ Save to localStorage
+    localStorage.setItem("currentPage", page.toString());
 
 
   };
