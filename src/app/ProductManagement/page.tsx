@@ -41,16 +41,33 @@ const ProductManagement: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  
+  //meant to be used for refresh
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageFromUrl = urlParams.get("page");
     const savedPage = localStorage.getItem("currentPage");
-
+  
+    // Validate URL parameter first (highest priority)
     if (pageFromUrl) {
-      setCurrentPage(Number(pageFromUrl));
-    } else if (savedPage) {
-      setCurrentPage(Number(savedPage));
+      const pageNumFromUrl = Number(pageFromUrl);
+      if (pageNumFromUrl > 0 && Number.isInteger(pageNumFromUrl)) {
+        setCurrentPage(pageNumFromUrl);
+        return; // Exit early - URL parameter is valid and applied
+      }
     }
+  
+    // Validate localStorage value (second priority)
+    if (savedPage) {
+      const pageNumFromStorage = Number(savedPage);
+      if (pageNumFromStorage > 0 && Number.isInteger(pageNumFromStorage)) {
+        setCurrentPage(pageNumFromStorage);
+        return; // Exit early - localStorage value is valid and applied
+      }
+    }
+  
+    // If both fail validation, currentPage remains at default value (1)
+    // No need to explicitly set it since useState(1) already handles the default
   }, []);
 
   const handleClose = () => {
