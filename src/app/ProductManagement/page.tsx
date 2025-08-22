@@ -8,8 +8,6 @@ import Pagination from "./Pagination";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-// let token: string | null = null; // ✅ normal variable for token
-
 const ProductManagement: React.FC = () => {
   interface Product {
     pId?: number;
@@ -42,7 +40,60 @@ const ProductManagement: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   
-  //meant to be used for refresh
+  // ✅ NEW: Track original form data for comparison
+  const [originalFormProduct, setOriginalFormProduct] = useState<Product | null>(null);
+  
+  // ✅ NEW: Check if form has changes (derived from existing formProduct state)
+  const hasUnsavedChanges = (() => {
+    if (!originalFormProduct) {
+      // For new products, check if any field has meaningful data
+        // originalFormProduct is the product that existed before you opened the modal.
+
+// When you’re adding a new product, there is no "original" product yet → so originalFormProduct is null.
+
+// In that case, !originalFormProduct evaluates to true, and the code inside this block runs.
+
+
+
+
+      return !!(
+        formProduct.pName.trim() ||
+        formProduct.rate > 0 ||
+        formProduct.department.trim() ||
+        formProduct.mfgDate ||
+        formProduct.notes.trim()
+      );
+    }
+    
+    // For editing, compare with original values
+    return (
+      formProduct.pName !== originalFormProduct.pName ||
+      formProduct.rate !== originalFormProduct.rate ||
+      formProduct.department !== originalFormProduct.department ||
+      formProduct.mfgDate !== originalFormProduct.mfgDate ||
+      formProduct.notes !== originalFormProduct.notes
+    );
+  })();
+
+  // ✅ NEW: Browser warning for unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges ) {
+        e.preventDefault();
+        return ''; // Some browsers require a return value
+      }
+    };
+
+    if (hasUnsavedChanges ) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+
+  // Page refresh restoration useEffect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const pageFromUrl = urlParams.get("page");
@@ -53,7 +104,7 @@ const ProductManagement: React.FC = () => {
       const pageNumFromUrl = Number(pageFromUrl);
       if (pageNumFromUrl > 0 && Number.isInteger(pageNumFromUrl)) {
         setCurrentPage(pageNumFromUrl);
-        return; // Exit early - URL parameter is valid and applied
+        return;
       }
     }
   
@@ -62,15 +113,21 @@ const ProductManagement: React.FC = () => {
       const pageNumFromStorage = Number(savedPage);
       if (pageNumFromStorage > 0 && Number.isInteger(pageNumFromStorage)) {
         setCurrentPage(pageNumFromStorage);
-        return; // Exit early - localStorage value is valid and applied
+        return;
       }
     }
-  
-    // If both fail validation, currentPage remains at default value (1)
-    // No need to explicitly set it since useState(1) already handles the default
   }, []);
 
   const handleClose = () => {
+    // ✅ NEW: Show confirmation if there are unsaved changes
+    if (hasUnsavedChanges) {
+      const confirmClose = window.confirm(
+        'You have unsaved changes. Are you sure you want to close without saving?'
+      );
+      if (!confirmClose) {
+        return; // Don't close if user cancels
+      }
+    }
     setShowModal(false);
     setIsEditing(false);
     setFormProduct({
@@ -80,10 +137,13 @@ const ProductManagement: React.FC = () => {
       mfgDate: '',
       notes: '',
     });
+    
+    // ✅ NEW: Reset tracking
+    setOriginalFormProduct(null);
   };
 
   const fetchProduct = async () => {
-    if (!token) return; // ✅ use normal variable
+    if (!token) return;
     setLoading(true);
     try {
       const response = await fetch('http://182.237.13.165/AkshReactAPI/api/Product/List', {
@@ -107,6 +167,7 @@ const ProductManagement: React.FC = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const savedToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     if (savedToken) {
@@ -115,12 +176,12 @@ const ProductManagement: React.FC = () => {
     }
   }, [token]);
 
-
-  //fetchProduct runs on component mount and token state
+  // ✅ UPDATED: Simplified - no need to track changes manually
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
   };
 
+  // ✅ UPDATED: Simplified - no need to track changes manually
   const handleDepartmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormProduct((prev) => ({ ...prev, department: e.target.value }));
   };
@@ -128,15 +189,13 @@ const ProductManagement: React.FC = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
-    // ✅ Save to URL
+    // Save to URL
     const url = new URL(window.location.href);
     url.searchParams.set("page", page.toString());
     window.history.pushState({}, "", url);
 
-    // ✅ Save to localStorage
+    // Save to localStorage
     localStorage.setItem("currentPage", page.toString());
-
-
   };
 
   const validateProduct = (product: Product): string[] => {
@@ -149,14 +208,20 @@ const ProductManagement: React.FC = () => {
     return errors;
   };
 
+  // ✅ NEW: Handle successful save/update
+  const handleSaveSuccess = () => {
+    setOriginalFormProduct(null);
+  };
+
   const filteredProducts = productlist.filter((product) =>
     Object.values(product).some((value) =>
+    
       String(value ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+
     )
   );
-
+console.log("Filtered Products:",searchTerm);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  //round's up
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
@@ -169,7 +234,16 @@ const ProductManagement: React.FC = () => {
         <button
           className="btn btn-primary"
           onClick={() => {
+            // ✅ NEW: Set up for new product
             setIsEditing(false);
+            setFormProduct({
+              pName: '',
+              rate: 0,
+              department: '',
+              mfgDate: '',
+              notes: '',
+            });
+            setOriginalFormProduct(null); // No original for new products
             setShowModal(true);
           }}
         >
@@ -197,7 +271,9 @@ const ProductManagement: React.FC = () => {
           isEditing={isEditing}
           formProduct={formProduct}
           onEdit={(product) => {
+            // ✅ NEW: Set up for editing existing product
             setFormProduct(product);
+            setOriginalFormProduct({ ...product }); // Deep copy for comparison
             setIsEditing(true);
             setShowModal(true);
           }}
@@ -222,8 +298,12 @@ const ProductManagement: React.FC = () => {
           handleDepartmentChange={handleDepartmentChange}
           refreshList={fetchProduct}
           validateProduct={validateProduct}
-          token={token} // ✅ normal variable
+          token={token}
           productList={productlist}
+          // ✅ NEW: Pass success callback
+          onSaveSuccess={handleSaveSuccess}
+          // ✅ NEW: Pass unsaved changes state for UI feedback
+          hasUnsavedChanges={hasUnsavedChanges}
         />
       )}
 
@@ -239,6 +319,7 @@ const ProductManagement: React.FC = () => {
           />
         </div>
       )}
+      
       {showDeleteModal && productToDelete && (
         <DeleteModal
           productId={productToDelete.pId!}

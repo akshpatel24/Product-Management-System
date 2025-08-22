@@ -20,6 +20,8 @@ interface Props {
   validateProduct: (product: Product) => string[];
   token: any;
   productList: Product[]; // ✅ Added this line
+  onSaveSuccess: () => void; // Added onSaveSuccess prop
+  hasUnsavedChanges: boolean; 
 }
 
 const AddEditProductModal: React.FC<Props> = ({
@@ -32,7 +34,10 @@ const AddEditProductModal: React.FC<Props> = ({
   refreshList,
   validateProduct,
   token,
-  productList // ✅ Destructured it
+  productList, // ✅ Destructured it
+   onSaveSuccess,
+  hasUnsavedChanges// Added this prop
+  
 }) => {
 
   const addProduct = async () => {
