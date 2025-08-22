@@ -19,9 +19,8 @@ interface Props {
   refreshList: () => void;
   validateProduct: (product: Product) => string[];
   token: any;
-  productList: Product[]; // ✅ Added this line
-  onSaveSuccess: () => void; // Added onSaveSuccess prop
-  hasUnsavedChanges: boolean; 
+  productList: Product[];
+  onSaveSuccess: () => void; // ✅ Added this
 }
 
 const AddEditProductModal: React.FC<Props> = ({
@@ -34,10 +33,8 @@ const AddEditProductModal: React.FC<Props> = ({
   refreshList,
   validateProduct,
   token,
-  productList, // ✅ Destructured it
-   onSaveSuccess,
-  hasUnsavedChanges// Added this prop
-  
+  productList,
+  onSaveSuccess, // ✅ Destructured it
 }) => {
 
   const addProduct = async () => {
@@ -49,28 +46,33 @@ const AddEditProductModal: React.FC<Props> = ({
       },
       body: JSON.stringify(formProduct),
     });
+
     if (response.ok) {
       alert("Product added successfully!");
       refreshList();
-      handleClose();
+      onSaveSuccess(); // ✅ Reset baseline + close modal
     } else {
       alert("Error adding product.");
     }
   };
 
   const updateProduct = async () => {
-    const response = await fetch(`http://182.237.13.165/AkshReactAPI/api/Product/${formProduct.pId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(formProduct),
-    });
+    const response = await fetch(
+      `http://182.237.13.165/AkshReactAPI/api/Product/${formProduct.pId}`, 
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formProduct),
+      }
+    );
+
     if (response.ok) {
       alert("Product updated successfully!");
       refreshList();
-      handleClose();
+      onSaveSuccess(); // ✅ Reset baseline + close modal
     } else {
       alert("Failed to update product.");
     }
@@ -139,8 +141,7 @@ const AddEditProductModal: React.FC<Props> = ({
               className="form-control mb-2"
               value={formProduct.mfgDate ? formProduct.mfgDate.split('T')[0] : ''}
               onChange={handleInputChange}
-              max={new Date().toISOString().split('T')[0]}  // This sets minimum selectable date to today
-
+              max={new Date().toISOString().split('T')[0]}
             />
             <input
               type="text"
@@ -164,5 +165,3 @@ const AddEditProductModal: React.FC<Props> = ({
 };
 
 export default AddEditProductModal;
-
-//sdfsdfs

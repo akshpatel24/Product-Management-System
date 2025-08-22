@@ -51,3 +51,16 @@ feat(pagination): persist current page using URL & localStorage
 - Updated `useEffect` to restore currentPage from either the URL or 
   localStorage when the component mounts.
 - Ensures pagination state is preserved across page refreshes or navigation.
+
+
+
+August 22:
+I wanted the modal to only warn me if I have unsaved changes.
+
+I compare what I typed (formProduct) with what I last saved (originalFormProduct).
+
+If they don’t match, I should see a popup when I try to close.
+
+But when I press Save/Add, I don’t want the popup.
+
+So I added handleSaveSuccess to reset the saved baseline, meaning my changes are saved and the popup won’t show.

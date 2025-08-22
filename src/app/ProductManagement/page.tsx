@@ -55,7 +55,7 @@ const ProductManagement: React.FC = () => {
 
 
 
-
+       
       return !!(
         formProduct.pName.trim() ||
         formProduct.rate > 0 ||
@@ -75,6 +75,17 @@ const ProductManagement: React.FC = () => {
     );
   })();
 
+  const handleSaveSuccess = () => {
+    setOriginalFormProduct(formProduct); // saved data = baseline
+    setShowModal(false);
+    setIsEditing(false);
+  };
+
+
+
+
+
+
   // ✅ NEW: Browser warning for unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -82,7 +93,11 @@ const ProductManagement: React.FC = () => {
         e.preventDefault();
         return ''; // Some browsers require a return value
       }
-    };
+    };    
+    // handleBeforeUnload → function that runs when the user tries to close/refresh the page.
+
+    // If hasUnsavedChanges is true → it prevents leaving and shows a browser popup like "Changes you made may not be saved".
+
 
     if (hasUnsavedChanges ) {
       window.addEventListener('beforeunload', handleBeforeUnload);
@@ -139,7 +154,6 @@ const ProductManagement: React.FC = () => {
     });
     
     // ✅ NEW: Reset tracking
-    setOriginalFormProduct(null);
   };
 
   const fetchProduct = async () => {
@@ -208,10 +222,7 @@ const ProductManagement: React.FC = () => {
     return errors;
   };
 
-  // ✅ NEW: Handle successful save/update
-  const handleSaveSuccess = () => {
-    setOriginalFormProduct(null);
-  };
+
 
   const filteredProducts = productlist.filter((product) =>
     Object.values(product).some((value) =>
@@ -300,10 +311,11 @@ console.log("Filtered Products:",searchTerm);
           validateProduct={validateProduct}
           token={token}
           productList={productlist}
+          onSaveSuccess={handleSaveSuccess} 
           // ✅ NEW: Pass success callback
-          onSaveSuccess={handleSaveSuccess}
+          // onSaveSuccess={handleSaveSuccess}
           // ✅ NEW: Pass unsaved changes state for UI feedback
-          hasUnsavedChanges={hasUnsavedChanges}
+          // hasUnsavedChanges={hasUnsavedChanges}
         />
       )}
 
