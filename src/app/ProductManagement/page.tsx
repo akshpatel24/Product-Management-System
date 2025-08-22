@@ -284,7 +284,7 @@ console.log("Filtered Products:",searchTerm);
           onEdit={(product) => {
             // ✅ NEW: Set up for editing existing product
             setFormProduct(product);
-            setOriginalFormProduct({ ...product }); // Deep copy for comparison
+            // setOriginalFormProduct({ ...product }); // Deep copy for comparison
             setIsEditing(true);
             setShowModal(true);
           }}
