@@ -64,3 +64,7 @@ If they don’t match, I should see a popup when I try to close.
 But when I press Save/Add, I don’t want the popup.
 
 So I added handleSaveSuccess to reset the saved baseline, meaning my changes are saved and the popup won’t show.
+
+
+August 23:
+Added the Home page. However, I am currently resolving a persistent issue where the Landing/Home page does not display to the user before it redirects.
