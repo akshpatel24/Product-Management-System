@@ -1,4 +1,5 @@
 // import ProductManagement from ".//Crud2/page";
+import ProductHome from "./ProductManagement/Home/page";
 import Login from "./ProductManagement/Login/page";
 function Home() {
   return (
@@ -6,7 +7,9 @@ function Home() {
       {/* <h1>Hello world</h1>
   <SelectProper/> */}
       {/* <ProductManagement/> */}
-      <Login />
+      <ProductHome/>
+        {/* <Login/> */}
+      {/* <ProductHome /> */}
       {/* <SelectPropertwo/>
   <Arrayprint/> */}
       {/* <Example/> */}
