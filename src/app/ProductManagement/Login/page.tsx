@@ -4,10 +4,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 function Login() {
   const router = useRouter();
-
   const [form, setForm] = useState({
     email: '',
     username: '',
