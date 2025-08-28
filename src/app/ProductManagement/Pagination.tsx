@@ -9,7 +9,6 @@ interface PaginationProps {
 const Pagination = (props: PaginationProps) => {
   const pages = Array.from({ length: props.totalPages }, (_, i) => i + 1);
 
-  // Save current page to localStorage whenever it changes
 
 
   return (
