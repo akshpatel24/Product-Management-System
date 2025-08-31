@@ -188,8 +188,9 @@ const ProductManagement: React.FC = () => {
       setToken(savedToken);
       fetchProduct();
     }
-  }, [token]);
 
+  }, [token]);
+// check this out 
   // ✅ UPDATED: Simplified - no need to track changes manually
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormProduct({ ...formProduct, [e.target.name]: e.target.value });
